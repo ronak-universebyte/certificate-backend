@@ -221,7 +221,7 @@ exports.createCertificate = async (req, res) => {
     });
 
     const newStudentData = {
-      _id: `cert_${Date.now()}`,
+      // _id: `cert_${Date.now()}`,
       certificateNumber: certNum,
       verificationToken: secureToken,
       studentName,
@@ -246,11 +246,21 @@ exports.createCertificate = async (req, res) => {
     };
 
     let createdRecord = null;
+    // try {
+    //   createdRecord = await Student.create(newStudentData);
+    // } catch (dbErr) {
+    //   inMemoryStudents.unshift(newStudentData);
+    //   createdRecord = newStudentData;
+    // }
+
     try {
       createdRecord = await Student.create(newStudentData);
     } catch (dbErr) {
-      inMemoryStudents.unshift(newStudentData);
-      createdRecord = newStudentData;
+      console.error("MongoDB Create Error:", dbErr);
+      return res.status(500).json({
+        success: false,
+        message: dbErr.message
+      });
     }
 
     await logAction(

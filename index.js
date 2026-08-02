@@ -12,6 +12,7 @@ const analyticsRoutes = require('./routes/analyticsRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+
 // Security & Middleware
 app.use(helmet({
   contentSecurityPolicy: false // Allows inline images & QR rendering

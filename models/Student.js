@@ -78,6 +78,10 @@ const studentSchema = new mongoose.Schema({
   qrCodeUrl: {
     type: String
   },
+  qrCodeBase64: {
+    type: String,
+    default: ''
+  },
   verificationCount: {
     type: Number,
     default: 0
