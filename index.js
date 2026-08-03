@@ -1,3 +1,4 @@
+const cors = require("cors");
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
@@ -22,9 +23,8 @@ app.use(
 
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
   }),
 );
 
