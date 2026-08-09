@@ -1,29 +1,30 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: Number(process.env.SMTP_PORT) === 587,
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  requireTLS: true,
+
+  family: 4,
+
   auth: {
     user: process.env.SMTP_EMAIL,
     pass: process.env.SMTP_PASSWORD,
   },
+
+  connectionTimeout: 30000,
+  greetingTimeout: 30000,
+  socketTimeout: 30000,
 });
 
 const sendMail = async (to, subject, html) => {
   try {
-    console.log("SMTP CONFIG:", {
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      email: process.env.SMTP_EMAIL,
-      password: process.env.SMTP_PASSWORD ? "SET" : "MISSING",
-    });
-
-    console.log("Testing SMTP connection...");
+    console.log("📧 Testing Gmail SMTP...");
 
     await transporter.verify();
 
-    console.log("SMTP connection successful");
+    console.log("✅ Gmail SMTP connected");
 
     const info = await transporter.sendMail({
       from: `"UniverseByte" <${process.env.SMTP_EMAIL}>`,
@@ -32,15 +33,11 @@ const sendMail = async (to, subject, html) => {
       html,
     });
 
-    console.log("Email Sent:", info.messageId);
+    console.log("✅ Email Sent:", info.messageId);
 
     return info;
   } catch (error) {
-    console.error("SMTP ERROR CODE:", error.code);
-    console.error("SMTP ERROR RESPONSE:", error.response);
-    console.error("SMTP ERROR MESSAGE:", error.message);
-    console.error("FULL SMTP ERROR:", error);
-
+    console.error("❌ SMTP ERROR:", error);
     throw error;
   }
 };
