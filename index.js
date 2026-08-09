@@ -10,6 +10,8 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const certificateRoutes = require("./routes/certificateRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
+//contact mail
+const contactRoutes = require("./routes/contactRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,13 +23,30 @@ app.use(
   }),
 );
 
+// app.use(
+//   cors({
+//     origin: process.env.FRONTEND_URL,
+//     credentials: true,
+//   }),
+// );
+
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://verify.universebyte.in",
+];
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
-
 // Rate Limiting (DDoS & Brute Force Protection)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -46,6 +65,8 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/certificates", certificateRoutes);
 app.use("/api/analytics", analyticsRoutes);
+//contact mail route
+app.use("/api/contact", contactRoutes);
 
 // Healthcheck API
 app.get("/api/health", (req, res) => {
