@@ -14,6 +14,10 @@ const analyticsRoutes = require("./routes/analyticsRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 
 const app = express();
+
+// IMPORTANT: Render reverse proxy
+app.set("trust proxy", 1);
+
 const PORT = process.env.PORT || 5000;
 
 // Security & Middleware
